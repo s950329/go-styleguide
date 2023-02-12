@@ -13,7 +13,7 @@ https://google.github.io/styleguide/go
 
 <a id="about"></a>
 
-## About
+## 關於
 
 《Go 風格指南》和相關文件規範了目前最佳的撰寫可讀且符合慣用語法的 Go 的方法。遵從風格指南並非絕對必要，而且這些文件永遠不會是詳盡的。我們的目的是減少寫可讀 Go 時的猜測，讓新手能夠避免常見的錯誤。風格指南也用於統一 Google 中審查 Go 代碼時提供的風格指導。
 
@@ -28,7 +28,7 @@ https://google.github.io/styleguide/go
 
 <a id="docs"></a>
 
-### Documents
+### 文件
 
 1.  **[《風格指南》](<(https://google.github.io/styleguide/go/guide)>)** 概述了 Google 的 Go 風格基礎。該文件具有決定性，是《風格決策》和《最佳實踐》建議的基礎。
 
