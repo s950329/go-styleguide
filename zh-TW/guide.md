@@ -20,15 +20,6 @@ information.
 
 <a id="principles"></a>
 
-：
-：
-：
-：
-：
-
-代碼實際上在做什麼？
-代碼為什麼要做它所做的？
-
 ## 風格原則
 
 有一些全面的原則總結了如何考慮編寫可讀的 Go 代碼。以下是可讀代碼的屬性，按重要度排序：
@@ -39,11 +30,11 @@ information.
 1.  **[可維護性（Maintainability）]**: 代碼是易於維護的。
 1.  **[一致性（Consistency）]**: 代碼與更廣泛的 Google 代碼庫保持一致。
 
-[clarity]: #clarity
-[simplicity]: #simplicity
-[concision]: #concision
-[maintainability]: #maintainability
-[consistency]: #consistency
+[清晰性（clarity）]: #clarity
+[簡潔性（simplicity）]: #simplicity
+[簡明性（concision）]: #concision
+[可維護性（maintainability）]: #maintainability
+[一致性（consistency）]: #consistency
 
 <a id="clarity"></a>
 
