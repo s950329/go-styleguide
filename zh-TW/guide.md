@@ -20,109 +20,84 @@ information.
 
 <a id="principles"></a>
 
-## Style principles
+：
+：
+：
+：
+：
 
-There are a few overarching principles that summarize how to think about writing
-readable Go code. The following are attributes of readable code, in order of
-importance:
+代碼實際上在做什麼？
+代碼為什麼要做它所做的？
 
-1.  **[Clarity]**: The code's purpose and rationale is clear to the reader.
-1.  **[Simplicity]**: The code accomplishes its goal in the simplest way
-    possible.
-1.  **[Concision]**: The code has a high signal-to-noise ratio.
-1.  **[Maintainability]**: The code is written such that it can be easily
-    maintained.
-1.  **[Consistency]**: The code is consistent with the broader Google codebase.
+## 風格原則
 
-[Clarity]: #clarity
-[Simplicity]: #simplicity
-[Concision]: #concision
-[Maintainability]: #maintainability
-[Consistency]: #consistency
+有一些全面的原則總結了如何考慮編寫可讀的 Go 代碼。以下是可讀代碼的屬性，按重要度排序：
+
+1.  **[清晰性（Clarity）]**: 代碼的目的和意圖對讀者清晰明瞭。
+1.  **[簡潔性（Simplicity）]**: 代碼以最簡單的方式實現其目標。
+1.  **[簡明性（Concision）]**: 代碼具有高的噪信比。
+1.  **[可維護性（Maintainability）]**: 代碼是易於維護的。
+1.  **[一致性（Consistency）]**: 代碼與更廣泛的 Google 代碼庫保持一致。
+
+[clarity]: #clarity
+[simplicity]: #simplicity
+[concision]: #concision
+[maintainability]: #maintainability
+[consistency]: #consistency
 
 <a id="clarity"></a>
 
-### Clarity
+### 清晰性
 
-The core goal of readability is to produce code that is clear to the reader.
+可讀性的核心目標是產生對讀者來說清晰的代碼。
 
-Clarity is primarily achieved with effective naming, helpful commentary, and
-efficient code organization.
+通過有效的命名、有用的註釋和高效的代碼組織來實現清晰性。
 
-Clarity is to be viewed through the lens of the reader, not the author of the
-code. It is more important that code be easy to read than easy to write. Clarity
-in code has two distinct facets:
+清晰性應該從讀者的角度來看，而不是代碼的作者。代碼易於閱讀比易於編寫更重要。代碼的清晰性有兩個不同的方面：
 
-*   [What is the code actually doing?](#clarity-purpose)
-*   [Why is the code doing what it does?](#clarity-rationale)
+- [What is the code actually doing?](#clarity-purpose)
+- [Why is the code doing what it does?](#clarity-rationale)
 
 <a id="clarity-purpose"></a>
 
 #### What is the code actually doing?
 
-Go is designed such that it should be relatively straightforward to see what the
-code is doing. In cases of uncertainty or where a reader may require prior
-knowledge in order to understand the code, it is worth investing time in order
-to make the code's purpose clearer for future readers. For example, it may help
-to:
+Go 設計的宗旨是讓人們相對容易地看出代碼在做什麼。如果有不確定的情況或讀者需要先前的知識才能理解代碼，這值得我們花時間讓代碼的目的更清晰，以便未來的讀者更容易理解。例如，可以：
 
-*   Use more descriptive variable names
-*   Add additional commentary
-*   Break up the code with whitespace and comments
-*   Refactor the code into separate functions/methods to make it more modular
+- 使用更具描述性的變量名稱
+- 添加更多的註釋
+- 用空格和註釋分隔代碼
+- 重構代碼為單獨的功能函式/方法，使其更模塊化
 
-There is no one-size-fits-all approach here, but it is important to prioritize
-clarity when developing Go code.
+這裡沒有一種通用的解決方案，但在開發 Go 代碼時，重視清晰性是很重要的。
 
 <a id="clarity-rationale"></a>
 
 #### Why is the code doing what it does?
 
-The code's rationale is often sufficiently communicated by the names of
-variables, functions, methods, or packages. Where it is not, it is important to
-add commentary. The "Why?" is especially important when the code contains
-nuances that a reader may not be familiar with, such as:
+代碼的意圖通常可以通過變量、函數、方法或包的名稱充分傳達。如果無法做到這一點，添加註釋就變得非常重要。當代碼包含讀者可能不熟悉的細微差別時，「為什麼？」就顯得格外重要，例如：
 
-*   A nuance in the language, e.g., a closure will be capturing a loop variable,
-    but the closure is many lines away
-*   A nuance of the business logic, e.g., an access control check that needs to
-    distinguish between the actual user and someone impersonating a user
+- 語言中的細微差別，例如閉包會捕獲一個循環變量，但該閉包與循環變量相距很遠
+- 業務邏輯的細微差別，例如一個訪問控制檢查需要區分實際用戶和冒充用戶的人
 
-An API might require care to use correctly. For example, a piece of code may be
-intricate and difficult to follow for performance reasons, or a complex sequence
-of mathematical operations may use type conversions in an unexpected way. In
-these cases and many more, it is important that accompanying commentary and
-documentation explain these aspects so that future maintainers don't make a
-mistake and so that readers can understand the code without needing to
-reverse-engineer it.
+某個 API 可能需要特別小心地使用。例如，一段代碼可能因為性能原因而錯綜複雜，難以理解，或一個複雜的數學運算序列可能以意想不到的方式使用了類型轉換。在這些情況和更多情況下，重要的是隨附的註釋和文檔說明這些方面，以便未來的維護人員不會犯錯，讀者可以理解代碼，而無需進行反向工程。
 
-It is also important to be aware that some attempts to provide clarity (such as
-adding extra commentary) can actually obscure the code's purpose by adding
-clutter, restating what the code already says, contradicting the code, or adding
-maintenance burden to keep the comments up-to-date. Allow the code to speak for
-itself (e.g., by making the symbol names themselves self-describing) rather than
-adding redundant comments. It is often better for comments to explain why
-something is done, not what the code is doing.
+同時，需要意識到某些提供清晰度的嘗試（例如添加額外的註釋）可能實際上會通過增加混亂、重新陳述代碼已經說過的內容、與代碼矛盾或增加維護負擔來掩蓋代碼的目的。讓代碼自己講話（例如使符號名本身能自我描述）而不是添加冗余註釋往往更好。通常，註釋應解釋為什麼要這樣做，而不是代碼在做什麼。
 
-The Google codebase is largely uniform and consistent. It is often the case that
-code that stands out (e.g., by using an unfamiliar pattern) is doing so for a
-good reason, typically for performance. Maintaining this property is important
-to make it clear to readers where they should focus their attention when reading
-a new piece of code.
+Google 代碼庫基本上是統一和一致的。通常情況下，突出顯示的代碼（例如使用不熟悉的模式）之所以這樣做，是有很好的理由的，通常是為了性能。保持這一特性對於讓讀者清楚地了解他們在閱讀新的代碼時應該關注的方向非常重要。
 
-The standard library contains many examples of this principle in action. Among
-them:
+標準庫中包含了很多展現這一原則的範例，其中包括：
 
-*   Maintainer comments in
-    [`package sort`](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/sort.go).
-*   Good
-    [runnable examples in the same package](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/example_search_test.go),
-    which benefit both users (they
-    [show up in godoc](https://pkg.go.dev/sort#pkg-examples)) and maintainers
-    (they [run as part of tests](decisions#examples)).
-*   [`strings.Cut`](https://pkg.go.dev/strings#Cut) is only four lines of code,
-    but they improve the
-    [clarity and correctness of callsites](https://github.com/golang/go/issues/46336).
+- Maintainer comments in
+  [`package sort`](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/sort.go).
+- Good
+  [runnable examples in the same package](https://cs.opensource.google/go/go/+/refs/tags/go1.19.2:src/sort/example_search_test.go),
+  which benefit both users (they
+  [show up in godoc](https://pkg.go.dev/sort#pkg-examples)) and maintainers
+  (they [run as part of tests](decisions#examples)).
+- [`strings.Cut`](https://pkg.go.dev/strings#Cut) is only four lines of code,
+  but they improve the
+  [clarity and correctness of callsites](https://github.com/golang/go/issues/46336).
 
 <a id="simplicity"></a>
 
@@ -134,17 +109,17 @@ Go code should be written in the simplest way that accomplishes its goals, both
 in terms of behavior and performance. Within the Google Go codebase, simple
 code:
 
-*   Is easy to read from top to bottom
-*   Does not assume that you already know what it is doing
-*   Does not assume that you can memorize all of the preceding code
-*   Does not have unnecessary levels of abstraction
-*   Does not have names that call attention to something mundane
-*   Makes the propagation of values and decisions clear to the reader
-*   Has comments that explain why, not what, the code is doing to avoid future
-    deviation
-*   Has documentation that stands on its own
-*   Has useful errors and useful test failures
-*   May often be mutually exclusive with "clever" code
+- Is easy to read from top to bottom
+- Does not assume that you already know what it is doing
+- Does not assume that you can memorize all of the preceding code
+- Does not have unnecessary levels of abstraction
+- Does not have names that call attention to something mundane
+- Makes the propagation of values and decisions clear to the reader
+- Has comments that explain why, not what, the code is doing to avoid future
+  deviation
+- Has documentation that stands on its own
+- Has useful errors and useful test failures
+- May often be mutually exclusive with "clever" code
 
 Tradeoffs can arise between code simplicity and API usage simplicity. For
 example, it may be worthwhile to have the code be more complex so that the end
@@ -218,11 +193,11 @@ details.
 There are many things that can get in the way of surfacing the most salient
 details at any given time:
 
-*   Repetitive code
-*   Extraneous syntax
-*   [Opaque names](#naming)
-*   Unnecessary abstraction
-*   Whitespace
+- Repetitive code
+- Extraneous syntax
+- [Opaque names](#naming)
+- Unnecessary abstraction
+- Whitespace
 
 Repetitive code especially obscures the differences between each
 nearly-identical section, and requires a reader to visually compare similar
@@ -257,7 +232,7 @@ if err := doSomething(); err == nil { // if NO error
 }
 ```
 
-[Table-driven testing]: https://github.com/golang/go/wiki/TableDrivenTests
+[table-driven testing]: https://github.com/golang/go/wiki/TableDrivenTests
 [error handling]: https://go.dev/blog/errors-are-values
 ["boosting"]: best-practices#signal-boost
 
@@ -271,14 +246,14 @@ programmer who needs to change it. Clarity is key.
 
 Maintainable code:
 
-*   Is easy for a future programmer to modify correctly
-*   Has APIs that are structured so that they can grow gracefully
-*   Is clear about the assumptions that it makes and chooses abstractions that
-    map to the structure of the problem, not to the structure of the code
-*   Avoids unnecessary coupling and doesn't include features that are not used
-*   Has a comprehensive test suite to ensure promised behaviors are maintained
-    and important logic is correct, and the tests provide clear, actionable
-    diagnostics in case of failure
+- Is easy for a future programmer to modify correctly
+- Has APIs that are structured so that they can grow gracefully
+- Is clear about the assumptions that it makes and chooses abstractions that
+  map to the structure of the problem, not to the structure of the code
+- Avoids unnecessary coupling and doesn't include features that are not used
+- Has a comprehensive test suite to ensure promised behaviors are maintained
+  and important logic is correct, and the tests provide clear, actionable
+  diagnostics in case of failure
 
 When using abstractions like interfaces and types which by definition remove
 information from the context in which they are used, it is important to ensure
@@ -383,7 +358,7 @@ and new additions will have to clear a high bar.
 The guidelines below expand on the recommendations in [Effective Go], which
 provide a common baseline for Go code across the entire community.
 
-[Effective Go]: https://go.dev/doc/effective_go
+[effective go]: https://go.dev/doc/effective_go
 
 <a id="formatting"></a>
 
@@ -394,8 +369,8 @@ This format is enforced by a presubmit check in the Google codebase.
 [Generated code] should generally also be formatted (e.g., by using
 [`format.Source`]), as it is also browsable in Code Search.
 
-[Generated code]: https://docs.bazel.build/versions/main/be/general.html#genrule
-[`format.Source`]: https://pkg.go.dev/go/format#Source
+[generated code]: https://docs.bazel.build/versions/main/be/general.html#genrule
+[`format.source`]: https://pkg.go.dev/go/format#Source
 
 <a id="mixed-caps"></a>
 
@@ -425,9 +400,9 @@ practical for it to be, the line should be allowed to remain long.
 
 Do not split a line:
 
-*   Before an [indentation change](decisions#indentation-confusion) (e.g.,
-    function declaration, conditional)
-*   To make a long string (e.g., a URL) fit into multiple shorter lines
+- Before an [indentation change](decisions#indentation-confusion) (e.g.,
+  function declaration, conditional)
+- To make a long string (e.g., a URL) fit into multiple shorter lines
 
 <a id="naming"></a>
 
@@ -436,9 +411,9 @@ Do not split a line:
 Naming is more art than science. In Go, names tend to be somewhat shorter than
 in many other languages, but the same [general guidelines] apply. Names should:
 
-*   Not feel [repetitive](decisions#repetition) when they are used
-*   Take the context into consideration
-*   Not repeat concepts that are already clear
+- Not feel [repetitive](decisions#repetition) when they are used
+- Take the context into consideration
+- Not repeat concepts that are already clear
 
 You can find more specific guidance on naming in [decisions](decisions#naming).
 
@@ -455,13 +430,13 @@ or project directory) has taken a consistent stance on the issue.
 
 Examples of **valid** local style considerations:
 
-*   Use of `%s` or `%v` for formatted printing of errors
-*   Usage of buffered channels in lieu of mutexes
+- Use of `%s` or `%v` for formatted printing of errors
+- Usage of buffered channels in lieu of mutexes
 
 Examples of **invalid** local style considerations:
 
-*   Line length restrictions for code
-*   Use of assertion-based testing libraries
+- Line length restrictions for code
+- Use of assertion-based testing libraries
 
 If the local style disagrees with the style guide but the readability impact is
 limited to one file, it will generally be surfaced in a code review for which a
