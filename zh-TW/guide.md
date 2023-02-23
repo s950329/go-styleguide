@@ -92,118 +92,64 @@ Google 代碼庫基本上是統一和一致的。通常情況下，突出顯示�
 
 <a id="simplicity"></a>
 
-### Simplicity
+### 簡單性
 
-Your Go code should be simple for those using, reading, and maintaining it.
+你的 Go 代碼應該對使用、閱讀和維護它的人而言都是簡單的。
 
-Go code should be written in the simplest way that accomplishes its goals, both
-in terms of behavior and performance. Within the Google Go codebase, simple
-code:
+Go 代碼應該以實現其目標為基礎，既在行為上，也在性能上，以最簡單的方式編寫。在 Google 的 Go 代碼庫中，簡單的代碼：
 
-- Is easy to read from top to bottom
-- Does not assume that you already know what it is doing
-- Does not assume that you can memorize all of the preceding code
-- Does not have unnecessary levels of abstraction
-- Does not have names that call attention to something mundane
-- Makes the propagation of values and decisions clear to the reader
-- Has comments that explain why, not what, the code is doing to avoid future
-  deviation
-- Has documentation that stands on its own
-- Has useful errors and useful test failures
-- May often be mutually exclusive with "clever" code
+- 容易從頂部到底部閱讀
+- 不假設你已經知道它在做什麼
+- 不假設你可以記住所有之前的代碼
+- 沒有不必要的抽象層次
+- 沒有引起讀者注意的平凡名稱
+- 使讀者清楚地了解價值觀和決策
+- 具有解釋代碼為什麼而不是什麼的注釋，以避免未來偏差
+- 具有獨立的文檔
+- 具有有用的錯誤和有用的測試失敗
+- 可能經常與“巧妙”的代碼相互排斥
 
-Tradeoffs can arise between code simplicity and API usage simplicity. For
-example, it may be worthwhile to have the code be more complex so that the end
-user of the API may more easily call the API correctly. In contrast, it may also
-be worthwhile to leave a bit of extra work to the end user of the API so that
-the code remains simple and easy to understand.
+代碼簡單性和 API 使用簡單性之間可能存在權衡。例如，代碼更複雜，以便 API 的最終用戶更容易正確地調用 API，可能是值得的。相反，讓 API 的最終用戶多做一點額外的工作，以便代碼保持簡單和易於理解，也可能是值得的。
 
-When code needs complexity, the complexity should be added deliberately. This is
-typically necessary if additional performance is required or where there are
-multiple disparate customers of a particular library or service. Complexity may
-be justified, but it should come with accompanying documentation so that clients
-and future maintainers are able to understand and navigate the complexity. This
-should be supplemented with tests and examples that demonstrate its correct
-usage, especially if there is both a "simple" and a "complex" way to use the
-code.
+當代碼需要複雜性時，應該有意地添加複雜性。如果需要額外的性能或有特定庫或服務的多個不同的客戶端，這通常是必需的。複雜性可能是合理的，但應該隨附相應的文檔，以便客戶和未來的維護人員能夠理解和運用複雜性。如果代碼既有“簡單”又有“複雜”的使用方式，尤其是需要演示其正確使用的測試和示例，那麼這應該得到補充。
 
-This principle does not imply that complex code cannot or should not be written
-in Go or that Go code is not allowed to be complex. We strive for a codebase
-that avoids unnecessary complexity so that when complexity does appear, it
-indicates that the code in question requires care to understand and maintain.
-Ideally, there should be accompanying commentary that explains the rationale and
-identifies the care that should be taken. This often arises when optimizing code
-for performance; doing so often requires a more complex approach, like
-preallocating a buffer and reusing it throughout a goroutine lifetime. When a
-maintainer sees this, it should be a clue that the code in question is
-performance-critical, and that should influence the care that is taken when
-making future changes. If employed unnecessarily, on the other hand, this
-complexity is a burden on those who need to read or change the code in the
-future.
+這個原則並不意味著 Go 程式碼不能或不應該是複雜的。我們力求讓代碼庫避免不必要的複雜性，這樣當複雜性出現時，就表明相應的代碼需要仔細理解和維護。理想情況下，應該有相應的注釋來解釋原理並確定應採取的注意事項。當優化代碼以提高性能時，往往需要更複雜的方法，比如在整個 goroutine 的生命周期中預分配緩衝區並重複使用它。當維護人員看到這種情況時，它應該是一個提示，表明相應的代碼對性能至關重要，這應該影響到在進行未來更改時所採取的謹慎措施。另一方面，如果不必要地使用這種複雜性，這種複雜性將成為未來需要閱讀或更改代碼的人的負擔。
 
-If code turns out to be very complex when its purpose should be simple, this is
-often a signal to revisit the implementation to see if there is a simpler way to
-accomplish the same thing.
+如果代碼的目的應該是簡單的，但最終變得非常複雜，這通常表明需要重新檢查實現方式，看是否有更簡單的方式來實現同樣的目標。
 
 <a id="least-mechanism"></a>
 
-#### Least mechanism
+#### 最小機制
 
-Where there are several ways to express the same idea, prefer the one that uses
-the most standard tools. Sophisticated machinery often exists, but should not be
-employed without reason. It is easy to add complexity to code as needed, whereas
-it is much harder to remove existing complexity after it has been found to be
-unnecessary.
+當有多種表達相同想法的方式時，請優先選擇使用最常見的工具。儘管存在複雜的機制，但不應無故使用。增加代碼的複雜度很容易，但發現它不必要後卻很難刪除。
 
-1.  Aim to use a core language construct (for example a channel, slice, map,
-    loop, or struct) when sufficient for your use case.
-2.  If there isn't one, look for a tool within the standard library (like an
-    HTTP client or a template engine).
-3.  Finally, consider whether there is a core library in the Google codebase
-    that is sufficient before introducing a new dependency or creating your own.
+1. 盡可能使用核心語言結構（例如 channel、slice、map、迴圈或 struct）來滿足您的用例。
+2. 如果沒有，請在標準庫中查找適當的工具（例如 HTTP 客戶端或模板引擎）。
+3. 最後，考慮是否存在於 Google 代碼庫中的核心庫能夠滿足需求，才引入新的依賴或創建自己的庫。
 
-As an example, consider production code that contains a flag bound to a variable
-with a default value which must be overridden in tests. Unless intending to test
-the program's command-line interface itself (say, with `os/exec`), it is simpler
-and therefore preferable to override the bound value directly rather than by
-using `flag.Set`.
+例如，考慮一個生產代碼，其中包含一個綁定到變量的標誌，具有預設值，在測試中必須覆蓋該值。除非意圖測試程式的命令行界面本身（例如，使用 `os/exec`），否則直接覆蓋綁定值比使用 `flag.Set` 更簡單，因此更可取。
 
-Similarly, if a piece of code requires a set membership check, a boolean-valued
-map (e.g., `map[string]bool`) often suffices. Libraries that provide set-like
-types and functionality should only be used if more complicated operations are
-required that are impossible or overly complicated with a map.
+同樣地，如果一段代碼需要集合成員檢查，布林值映射（例如 `map[string]bool`）通常就足夠了。僅在需要比使用映射更複雜的操作或操作過於複雜時才使用提供類集合類型和功能的庫。
 
 <a id="concision"></a>
 
 ### Concision
 
-Concise Go code has a high signal-to-noise ratio. It is easy to discern the
-relevant details, and the naming and structure guide the reader through these
-details.
+Go 簡潔的程式碼具有高信噪比，容易辨識相關細節，而命名和架構可以引導讀者了解這些細節。
 
-There are many things that can get in the way of surfacing the most salient
-details at any given time:
+有許多事情可能妨礙在任何時候突出顯示最重要的細節：
 
-- Repetitive code
-- Extraneous syntax
-- [Opaque names](#naming)
-- Unnecessary abstraction
-- Whitespace
+- 重複的程式碼
+- 多餘的語法
+- [不透明的名稱](#naming)
+- 不必要的抽象
+- 空格
 
-Repetitive code especially obscures the differences between each
-nearly-identical section, and requires a reader to visually compare similar
-lines of code to find the changes. [Table-driven testing] is a good example of a
-mechanism that can concisely factor out the common code from the important
-details of each repetition, but the choice of which pieces to include in the
-table will have an impact on how easy the table is to understand.
+重複的程式碼尤其隱藏了每個幾乎相同區段之間的差異，需要讀者視覺上比較類似的程式碼行以找到差異。[Table-driven testing] 是一個很好的例子，可以簡潔地將共同代碼因素從每個重複的重要細節中提取出來，但是選擇包含在表格中的哪些部分將對表格易於理解產生影響。
 
-When considering multiple ways to structure code, it is worth considering which
-way makes important details the most apparent.
+在考慮多種程式碼結構時，值得考慮哪種方式使重要細節最明顯。
 
-Understanding and using common code constructions and idioms are also important
-for maintaining a high signal-to-noise ratio. For example, the following code
-block is very common in [error handling], and the reader can quickly understand
-the purpose of this block.
+了解和使用常見的程式碼結構和慣用語法對於維持高信噪比也很重要。例如，以下程式碼塊在[錯誤處理]中非常常見，讀者可以快速了解此塊的用途。
 
 ```go
 // Good:
@@ -212,9 +158,7 @@ if err := doSomething(); err != nil {
 }
 ```
 
-If code looks very similar to this but is subtly different, a reader may not
-notice the change. In cases like this, it is worth intentionally ["boosting"]
-the signal of the error check by adding a comment to call attention to it.
+如果代碼看起來與此非常相似，但微妙地不同，讀者可能不會注意到更改。在這種情況下，值得有意地 ["增強"] 錯誤檢查的信號，方法是添加一個注釋來引起注意。
 
 ```go
 // Good:
