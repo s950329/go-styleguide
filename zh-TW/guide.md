@@ -175,34 +175,19 @@ if err := doSomething(); err == nil { // if NO error
 
 ### Maintainability
 
-Code is edited many more times than it is written. Readable code not only makes
-sense to a reader who is trying to understand how it works, but also to the
-programmer who needs to change it. Clarity is key.
+可讀性高的程式碼不僅對試圖理解其工作方式的讀者有意義，也對需要更改它的程式設計師有意義。清晰度至關重要。
 
-Maintainable code:
+易於維護的程式碼：
 
-- Is easy for a future programmer to modify correctly
-- Has APIs that are structured so that they can grow gracefully
-- Is clear about the assumptions that it makes and chooses abstractions that
-  map to the structure of the problem, not to the structure of the code
-- Avoids unnecessary coupling and doesn't include features that are not used
-- Has a comprehensive test suite to ensure promised behaviors are maintained
-  and important logic is correct, and the tests provide clear, actionable
-  diagnostics in case of failure
+- 易於未來的程式設計師正確地修改
+- 有能夠正常增長的 API 結構
+- 對它所做的假設有明確的說明，並選擇映射到問題結構而不是代碼結構的抽象
+- 避免不必要的耦合，並且不包含未使用的功能
+- 擁有全面的測試套件，以確保承諾的行為得以維持並且重要的邏輯是正確的，測試提供明確的，可操作的診斷以便在失敗時使用。
 
-When using abstractions like interfaces and types which by definition remove
-information from the context in which they are used, it is important to ensure
-that they provide sufficient benefit. Editors and IDEs can connect directly to a
-method definition and show the corresponding documentation when a concrete type
-is used, but can only refer to an interface definition otherwise. Interfaces are
-a powerful tool, but come with a cost, since the maintainer may need to
-understand the specifics of the underlying implementation in order to correctly
-use the interface, which must be explained within the interface documentation or
-at the call-site.
+當使用像介面和類型這樣的抽象時，它們從它們所使用的上下文中刪除了信息，因此確保它們提供足夠的好處非常重要。編輯器和 IDE 可以直接連接到方法定義，並在使用具體類型時顯示相應的文檔，但是否則只能引用介面定義。介面是一個強大的工具，但是伴隨著一些成本，因為維護者可能需要了解底層實現的具體細節，以便正確使用介面，這必須在介面文檔或呼叫點處加以說明。
 
-Maintainable code also avoids hiding important details in places that are easy
-to overlook. For example, in each of the following lines of code, the presence
-or lack of a single character is critical to understand the line:
+易於維護的代碼還避免將重要細節隱藏在容易忽略的地方。例如，在以下每行程式碼中，有或缺少一個字符對於理解該行至關重要：
 
 ```go
 // Bad:
@@ -218,9 +203,7 @@ if user, err = db.UserByID(userID); err != nil {
 leap := (year%4 == 0) && (!(year%100 == 0) || (year%400 == 0))
 ```
 
-Neither of these are incorrect, but both could be written in a more explicit
-fashion, or could have an accompanying comment that calls attention to the
-important behavior:
+這兩個範例都不是錯誤的，但是它們都可以用更明確的方式來撰寫，或是加上注釋以強調其重要行為：
 
 ```go
 // Good:
@@ -243,55 +226,29 @@ var (
 leap := leap4 && (!leap100 || leap400)
 ```
 
-In the same way, a helper function that hides critical logic or an important
-edge-case could make it easy for a future change to fail to account for it
-properly.
+同樣地，隱藏關鍵邏輯或重要邊緣案例的輔助函數可能會導致未來的更改無法正確處理。
 
-Predictable names are another feature of maintainable code. A user of a package
-or a maintainer of a piece of code should be able to predict the name of a
-variable, method, or function in a given context. Function parameters and
-receiver names for identical concepts should typically share the same name, both
-to keep documentation understandable and to facilitate refactoring code with
-minimal overhead.
+可預測的名稱是易於維護的代碼的另一個特點。使用套件的用戶或程式碼的維護者應該能夠預測在特定上下文中變量、方法或函數的名稱。相同概念的函數參數和接收器名稱通常應該共享相同的名稱，以便讓文件易於理解，並且便於在最小的開銷下重構代碼。
 
-Maintainable code minimizes its dependencies (both implicit and explicit).
-Depending on fewer packages means fewer lines of code that can affect behavior.
-Avoiding dependencies on internal or undocumented behavior makes code less
-likely to impose a maintenance burden when those behaviors change in the future.
+可維護的代碼最小化其依賴（包括隱含和顯式的）。依賴於更少的套件意味著更少的代碼行可以影響行為。避免依賴於內部或未記錄的行為使代碼在這些行為在未來發生更改時更少會產生維護負擔。
 
-When considering how to structure or write code, it is worth taking the time to
-think through ways in which the code may evolve over time. If a given approach
-is more conducive to easier and safer future changes, that is often a good
-trade-off, even if it means a slightly more complicated design.
+在考慮如何結構化或編寫代碼時，值得花時間思考代碼可能隨時間演變的方式。如果一種方法更有助於實現未來更輕鬆、更安全的更改，即使這意味著稍微複雜一些的設計，那也通常是一個好的折衷方案。
 
 <a id="consistency"></a>
 
 ### Consistency
 
-Consistent code is code that looks, feels, and behaves like similar code
-throughout the broader codebase, within the context of a team or package, and
-even within a single file.
+一致性代表的是，在整個程式碼庫、團隊或套件內，甚至是單個檔案內，程式碼看起來、感覺和行為都類似的程式碼。
 
-Consistency concerns do not override any of the principles above, but if a tie
-must be broken, it is often beneficial to break it in favor of consistency.
+一致性問題不會覆蓋上述任何原則，但如果必須作出選擇，通常更有利的做法是遵從一致性。
 
-Consistency within a package is often the most immediately important level of
-consistency. It can be very jarring if the same problem is approached in
-multiple ways throughout a package, or if the same concept has many names within
-a file. However, even this should not override documented style principles or
-global consistency.
+套件內的一致性通常是一致性中最重要的層級。如果在套件內以多種方式解決相同的問題，或者在檔案內使用多個名稱表示相同的概念，那麼這將會非常令人煩擾。然而，即使如此，這也不應覆蓋已經明確定義的風格原則或全域一致性。
 
 <a id="core"></a>
 
 ## Core guidelines
 
-These guidelines collect the most important aspects of Go style that all Go code
-is expected to follow. We expect that these principles be learned and followed
-by the time readability is granted. These are not expected to change frequently,
-and new additions will have to clear a high bar.
-
-The guidelines below expand on the recommendations in [Effective Go], which
-provide a common baseline for Go code across the entire community.
+以下的指南收集了 Go 風格的最重要方面，所有的 Go 代碼都應該遵循這些原則。我們期望這些原則在讀取權限獲得之前就被學習和遵循。這些原則不會經常變化，新的添加必須符合高標準。下面的指南擴展了 [Effective Go] 中的建議，為整個社區的 Go 代碼提供了共同的基準。
 
 [effective go]: https://go.dev/doc/effective_go
 
@@ -299,10 +256,7 @@ provide a common baseline for Go code across the entire community.
 
 ### Formatting
 
-All Go source files must conform to the format outputted by the `gofmt` tool.
-This format is enforced by a presubmit check in the Google codebase.
-[Generated code] should generally also be formatted (e.g., by using
-[`format.Source`]), as it is also browsable in Code Search.
+所有的 Go 代碼文件必須符合 gofmt 工具的輸出格式。Google 的代碼庫中有一個預提交檢查會強制執行此格式。通常情況下，[生成的代碼] 也應進行格式化（例如使用 [format.Source] 函數），因為這些代碼也可以在代碼搜尋中被瀏覽。
 
 [generated code]: https://docs.bazel.build/versions/main/be/general.html#genrule
 [`format.source`]: https://pkg.go.dev/go/format#Source
@@ -310,6 +264,12 @@ This format is enforced by a presubmit check in the Google codebase.
 <a id="mixed-caps"></a>
 
 ### MixedCaps
+
+Go 語言的變數名稱採用大小寫混合的方式（`MixedCaps` 或 `mixedCaps`，也叫做駝峰命名法），而不是使用底線(snake case)來寫多個單字的名稱。
+
+即使這樣做與其他語言的命名規則不同，仍然應這樣做。例如，如果一個常量是被公開的，那麼它應該是 `MaxLength`(而不是 `MAX_LENGTH`)，如果未被公開，則應該是 `maxLength`(而不是 `max_length`)。
+
+為了選擇最初的大寫字母，局部變數被視為[未公開]（[unexported]）。 // 待潤飾
 
 Go source code uses `MixedCaps` or `mixedCaps` (camel case) rather than
 underscores (snake case) when writing multi-word names.
@@ -329,28 +289,24 @@ initial capitalization.
 
 ### Line length
 
-There is no fixed line length for Go source code. If a line feels too long, it
-should be refactored instead of broken. If it is already as short as it is
-practical for it to be, the line should be allowed to remain long.
+Go 語言的程式碼沒有固定的行長限制。如果一行程式碼看起來太長，應該考慮重構，而不是將其拆成多行。如果已經盡可能縮短行長，則可以保留長行。
 
-Do not split a line:
+不要在以下情況下拆分一行程式碼：
 
-- Before an [indentation change](decisions#indentation-confusion) (e.g.,
-  function declaration, conditional)
-- To make a long string (e.g., a URL) fit into multiple shorter lines
+- 在[縮排變更](decisions#indentation-confusion)之前（例如函數聲明、條件語句）。
+- 將長字符串（例如 URL）分成多個較短的行。
 
 <a id="naming"></a>
 
 ### Naming
 
-Naming is more art than science. In Go, names tend to be somewhat shorter than
-in many other languages, but the same [general guidelines] apply. Names should:
+命名比起科學更像是藝術。在 Go 語言中，名稱通常比許多其他語言要短，但相同的[一般指南]適用。名稱應該：
 
-- Not feel [repetitive](decisions#repetition) when they are used
-- Take the context into consideration
-- Not repeat concepts that are already clear
+- 使用時不應感覺[重複](decisions#repetition)
+- 考慮上下文
+- 不要重複已經清晰的概念
 
-You can find more specific guidance on naming in [decisions](decisions#naming).
+您可以在[決策](decisions#naming)中找到更具體的命名指南。
 
 [general guidelines]: https://testing.googleblog.com/2017/10/code-health-identifiernamingpostforworl.html
 
@@ -358,12 +314,9 @@ You can find more specific guidance on naming in [decisions](decisions#naming).
 
 ### Local consistency
 
-Where the style guide has nothing to say about a particular point of style,
-authors are free to choose the style that they prefer, unless the code in close
-proximity (usually within the same file or package, but sometimes within a team
-or project directory) has taken a consistent stance on the issue.
+如果風格指南沒有對特定的風格點提出任何建議，作者可以自由選擇他們喜歡的風格，除非相近的程式碼（通常在同一個檔案或套件中，但有時在團隊或專案目錄中）對該問題已經採取了一致的態度。
 
-Examples of **valid** local style considerations:
+**有效的** 本地風格考慮的範例：
 
 - Use of `%s` or `%v` for formatted printing of errors
 - Usage of buffered channels in lieu of mutexes
@@ -373,18 +326,9 @@ Examples of **invalid** local style considerations:
 - Line length restrictions for code
 - Use of assertion-based testing libraries
 
-If the local style disagrees with the style guide but the readability impact is
-limited to one file, it will generally be surfaced in a code review for which a
-consistent fix would be outside the scope of the CL in question. At that point,
-it is appropriate to file a bug to track the fix.
+如果本地風格與風格指南不一致，但可讀性的影響僅限於一個文件，它通常會在代碼審查中出現，而一致的修復超出了相關 CL 的範圍。此時，適當的做法是提交一個 bug 以跟踪修復。
 
-If a change would worsen an existing style deviation, expose it in more API
-surfaces, expand the number of files in which the deviation is present, or
-introduce an actual bug, then local consistency is no longer a valid
-justification for violating the style guide for new code. In these cases, it is
-appropriate for the author to clean up the existing codebase in the same CL,
-perform a refactor in advance of the current CL, or find an alternative that at
-least does not make the local problem worse.
+如果更改將惡化現有的風格偏差，將其表現在更多 API 表面上，擴大存在偏差的文件數量，或者引入實際的 bug，那麼本地一致性不再是新代碼違反風格指南的藉口。在這些情況下，作者應在同一 CL 中清理現有的代碼庫，對當前 CL 進行重構，或找到一個至少不會使本地問題惡化的替代方案。
 
 <!--
 

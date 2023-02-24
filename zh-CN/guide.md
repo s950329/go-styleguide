@@ -71,7 +71,7 @@ Go 设计的宗旨是让人们相对容易地看出代码在做什么。如果�
 - 语言中的细微差别，例如闭包会捕获一个循环变量，但该闭包与循环变量相距很远
 - 业务逻辑的细微差别，例如一个访问控制检查需要区分实际用户和冒充用户的人
 
-某个 API 可能需要特别小心地使用。例如，一段代码可能因为性能原因而错综复杂，难以理解，或一个复杂的数学运算序列可能以意想不到的方式使用了类型转换。在这些情况和更多情况下，重要的是随附的注释和文档说明这些方面，以便未来的维护人员不会犯错，读者可以理解代码，而无需进行反向工程。
+某个 API 可能需要特别小心地使用。例如，一段代码可能因为性能原因而错综复杂，难以理解，或一个复杂的数学运算序列可能以意想不到的方式使用了类型转换。在这些情况和更多情况下，重要的是随附的注释和文件说明这些方面，以便未来的维护人员不会犯错，读者可以理解代码，而无需进行反向工程。
 
 同时，需要意识到某些提供清晰度的尝试（例如添加额外的注释）可能实际上会通过增加混乱、重新陈述代码已经说过的内容、与代码矛盾或增加维护负担来掩盖代码的目的。让代码自己讲话（例如使符号名本身能自我描述）而不是添加冗余注释往往更好。通常，注释应解释为什么要这样做，而不是代码在做什么。
 
@@ -105,13 +105,13 @@ Go 代码应该以实现其目标为基础，既在行为上，也在性能上�
 - 没有引起读者注意的平凡名称
 - 使读者清楚地了解价值观和决策
 - 具有解释代码为什么而不是什么的注释，以避免未来偏差
-- 具有独立的文档
+- 具有独立的文件
 - 具有有用的错误和有用的测试失败
 - 可能经常与“巧妙”的代码相互排斥
 
 代码简单性和 API 使用简单性之间可能存在权衡。例如，代码更复杂，以便 API 的最终用户更容易正确地调用 API，可能是值得的。相反，让 API 的最终用户多做一点额外的工作，以便代码保持简单和易于理解，也可能是值得的。
 
-当代码需要复杂性时，应该有意地添加复杂性。如果需要额外的性能或有特定库或服务的多个不同的客户端，这通常是必需的。复杂性可能是合理的，但应该随附相应的文档，以便客户和未来的维护人员能够理解和运用复杂性。如果代码既有“简单”又有“复杂”的使用方式，尤其是需要演示其正确使用的测试和示例，那么这应该得到补充。
+当代码需要复杂性时，应该有意地添加复杂性。如果需要额外的性能或有特定库或服务的多个不同的客户端，这通常是必需的。复杂性可能是合理的，但应该随附相应的文件，以便客户和未来的维护人员能够理解和运用复杂性。如果代码既有“简单”又有“复杂”的使用方式，尤其是需要演示其正确使用的测试和示例，那么这应该得到补充。
 
 这个原则并不意味着 Go 程式码不能或不应该是复杂的。我们力求让代码库避免不必要的复杂性，这样当复杂性出现时，就表明相应的代码需要仔细理解和维护。理想情况下，应该有相应的注释来解释原理并确定应采取的注意事项。当优化代码以提高性能时，往往需要更复杂的方法，比如在整个 goroutine 的生命周期中预分配缓冲区并重复使用它。当维护人员看到这种情况时，它应该是一个提示，表明相应的代码对性能至关重要，这应该影响到在进行未来更改时所采取的谨慎措施。另一方面，如果不必要地使用这种复杂性，这种复杂性将成为未来需要阅读或更改代码的人的负担。
 
@@ -175,34 +175,19 @@ if err := doSomething(); err == nil { // if NO error
 
 ### Maintainability
 
-Code is edited many more times than it is written. Readable code not only makes
-sense to a reader who is trying to understand how it works, but also to the
-programmer who needs to change it. Clarity is key.
+可读性高的程式码不仅对试图理解其工作方式的读者有意义，也对需要更改它的程式设计师有意义。清晰度至关重要。
 
-Maintainable code:
+易于维护的程式码：
 
-- Is easy for a future programmer to modify correctly
-- Has APIs that are structured so that they can grow gracefully
-- Is clear about the assumptions that it makes and chooses abstractions that
-  map to the structure of the problem, not to the structure of the code
-- Avoids unnecessary coupling and doesn't include features that are not used
-- Has a comprehensive test suite to ensure promised behaviors are maintained
-  and important logic is correct, and the tests provide clear, actionable
-  diagnostics in case of failure
+- 易于未来的程式设计师正确地修改
+- 有能够正常增长的 API 结构
+- 对它所做的假设有明确的说明，并选择映射到问题结构而不是代码结构的抽象
+- 避免不必要的耦合，并且不包含未使用的功能
+- 拥有全面的测试套件，以确保承诺的行为得以维持并且重要的逻辑是正确的，测试提供明确的，可操作的诊断以便在失败时使用。
 
-When using abstractions like interfaces and types which by definition remove
-information from the context in which they are used, it is important to ensure
-that they provide sufficient benefit. Editors and IDEs can connect directly to a
-method definition and show the corresponding documentation when a concrete type
-is used, but can only refer to an interface definition otherwise. Interfaces are
-a powerful tool, but come with a cost, since the maintainer may need to
-understand the specifics of the underlying implementation in order to correctly
-use the interface, which must be explained within the interface documentation or
-at the call-site.
+当使用像介面和类型这样的抽象时，它们从它们所使用的上下文中删除了信息，因此确保它们提供足够的好处非常重要。编辑器和 IDE 可以直接连接到方法定义，并在使用具体类型时显示相应的文档，但是否则只能引用介面定义。介面是一个强大的工具，但是伴随着一些成本，因为维护者可能需要了解底层实现的具体细节，以便正确使用介面，这必须在介面文档或呼叫点处加以说明。
 
-Maintainable code also avoids hiding important details in places that are easy
-to overlook. For example, in each of the following lines of code, the presence
-or lack of a single character is critical to understand the line:
+易于维护的代码还避免将重要细节隐藏在容易忽略的地方。例如，在以下每行程式码中，有或缺少一个字符对于理解该行至关重要：
 
 ```go
 // Bad:
@@ -218,9 +203,7 @@ if user, err = db.UserByID(userID); err != nil {
 leap := (year%4 == 0) && (!(year%100 == 0) || (year%400 == 0))
 ```
 
-Neither of these are incorrect, but both could be written in a more explicit
-fashion, or could have an accompanying comment that calls attention to the
-important behavior:
+这两个范例都不是错误的，但是它们都可以用更明确的方式来撰写，或是加上注释以强调其重要行为：
 
 ```go
 // Good:
@@ -243,55 +226,29 @@ var (
 leap := leap4 && (!leap100 || leap400)
 ```
 
-In the same way, a helper function that hides critical logic or an important
-edge-case could make it easy for a future change to fail to account for it
-properly.
+同样地，隐藏关键逻辑或重要边缘案例的辅助函数可能会导致未来的更改无法正确处理。
 
-Predictable names are another feature of maintainable code. A user of a package
-or a maintainer of a piece of code should be able to predict the name of a
-variable, method, or function in a given context. Function parameters and
-receiver names for identical concepts should typically share the same name, both
-to keep documentation understandable and to facilitate refactoring code with
-minimal overhead.
+可预测的名称是易于维护的代码的另一个特点。使用套件的用户或程式码的维护者应该能够预测在特定上下文中变量、方法或函数的名称。相同概念的函数参数和接收器名称通常应该共享相同的名称，以便让文件易于理解，并且便于在最小的开销下重构代码。
 
-Maintainable code minimizes its dependencies (both implicit and explicit).
-Depending on fewer packages means fewer lines of code that can affect behavior.
-Avoiding dependencies on internal or undocumented behavior makes code less
-likely to impose a maintenance burden when those behaviors change in the future.
+可维护的代码最小化其依赖（包括隐含和显式的）。依赖于更少的套件意味着更少的代码行可以影响行为。避免依赖于内部或未记录的行为使代码在这些行为在未来发生更改时更少会产生维护负担。
 
-When considering how to structure or write code, it is worth taking the time to
-think through ways in which the code may evolve over time. If a given approach
-is more conducive to easier and safer future changes, that is often a good
-trade-off, even if it means a slightly more complicated design.
+在考虑如何结构化或编写代码时，值得花时间思考代码可能随时间演变的方式。如果一种方法更有助于实现未来更轻松、更安全的更改，即使这意味着稍微复杂一些的设计，那也通常是一个好的折衷方案。
 
 <a id="consistency"></a>
 
 ### Consistency
 
-Consistent code is code that looks, feels, and behaves like similar code
-throughout the broader codebase, within the context of a team or package, and
-even within a single file.
+一致性代表的是，在整个程式码库、团队或套件内，甚至是单个档案内，程式码看起来、感觉和行为都类似的程式码。
 
-Consistency concerns do not override any of the principles above, but if a tie
-must be broken, it is often beneficial to break it in favor of consistency.
+一致性问题不会覆盖上述任何原则，但如果必须作出选择，通常更有利的做法是遵从一致性。
 
-Consistency within a package is often the most immediately important level of
-consistency. It can be very jarring if the same problem is approached in
-multiple ways throughout a package, or if the same concept has many names within
-a file. However, even this should not override documented style principles or
-global consistency.
+套件内的一致性通常是一致性中最重要的层级。如果在套件内以多种方式解决相同的问题，或者在档案内使用多个名称表示相同的概念，那么这将会非常令人烦扰。然而，即使如此，这也不应覆盖已经明确定义的风格原则或全域一致性。
 
 <a id="core"></a>
 
 ## Core guidelines
 
-These guidelines collect the most important aspects of Go style that all Go code
-is expected to follow. We expect that these principles be learned and followed
-by the time readability is granted. These are not expected to change frequently,
-and new additions will have to clear a high bar.
-
-The guidelines below expand on the recommendations in [Effective Go], which
-provide a common baseline for Go code across the entire community.
+以下的指南收集了 Go 风格的最重要方面，所有的 Go 代码都应该遵循这些原则。我们期望这些原则在读取权限获得之前就被学习和遵循。这些原则不会经常变化，新的添加必须符合高标准。下面的指南扩展了 [Effective Go] 中的建议，为整个社区的 Go 代码提供了共同的基准。
 
 [effective go]: https://go.dev/doc/effective_go
 
@@ -299,10 +256,7 @@ provide a common baseline for Go code across the entire community.
 
 ### Formatting
 
-All Go source files must conform to the format outputted by the `gofmt` tool.
-This format is enforced by a presubmit check in the Google codebase.
-[Generated code] should generally also be formatted (e.g., by using
-[`format.Source`]), as it is also browsable in Code Search.
+所有的 Go 代码文件必须符合 gofmt 工具的输出格式。Google 的代码库中有一个预提交检查会强制执行此格式。通常情况下，[生成的代码] 也应进行格式化（例如使用 [format.Source] 函数），因为这些代码也可以在代码搜寻中被浏览。
 
 [generated code]: https://docs.bazel.build/versions/main/be/general.html#genrule
 [`format.source`]: https://pkg.go.dev/go/format#Source
@@ -310,6 +264,12 @@ This format is enforced by a presubmit check in the Google codebase.
 <a id="mixed-caps"></a>
 
 ### MixedCaps
+
+Go 语言的变数名称采用大小写混合的方式（`MixedCaps` 或 `mixedCaps`，也叫做驼峰命名法），而不是使用底线(snake case)来写多个单字的名称。
+
+即使这样做与其他语言的命名规则不同，仍然应这样做。例如，如果一个常量是被公开的，那么它应该是 `MaxLength`(而不是 `MAX_LENGTH`)，如果未被公开，则应该是 `maxLength`(而不是 `max_length`)。
+
+为了选择最初的大写字母，局部变数被视为[未公开]（[unexported]）。 // 待润饰
 
 Go source code uses `MixedCaps` or `mixedCaps` (camel case) rather than
 underscores (snake case) when writing multi-word names.
@@ -329,28 +289,24 @@ initial capitalization.
 
 ### Line length
 
-There is no fixed line length for Go source code. If a line feels too long, it
-should be refactored instead of broken. If it is already as short as it is
-practical for it to be, the line should be allowed to remain long.
+Go 语言的程式码没有固定的行长限制。如果一行程式码看起来太长，应该考虑重构，而不是将其拆成多行。如果已经尽可能缩短行长，则可以保留长行。
 
-Do not split a line:
+不要在以下情况下拆分一行程式码：
 
-- Before an [indentation change](decisions#indentation-confusion) (e.g.,
-  function declaration, conditional)
-- To make a long string (e.g., a URL) fit into multiple shorter lines
+- 在[缩排变更](decisions#indentation-confusion)之前（例如函数声明、条件语句）。
+- 将长字符串（例如 URL）分成多个较短的行。
 
 <a id="naming"></a>
 
 ### Naming
 
-Naming is more art than science. In Go, names tend to be somewhat shorter than
-in many other languages, but the same [general guidelines] apply. Names should:
+命名比起科学更像是艺术。在 Go 语言中，名称通常比许多其他语言要短，但相同的[一般指南]适用。名称应该：
 
-- Not feel [repetitive](decisions#repetition) when they are used
-- Take the context into consideration
-- Not repeat concepts that are already clear
+- 使用时不应感觉[重复](decisions#repetition)
+- 考虑上下文
+- 不要重复已经清晰的概念
 
-You can find more specific guidance on naming in [decisions](decisions#naming).
+您可以在[决策](decisions#naming)中找到更具体的命名指南。
 
 [general guidelines]: https://testing.googleblog.com/2017/10/code-health-identifiernamingpostforworl.html
 
@@ -358,12 +314,9 @@ You can find more specific guidance on naming in [decisions](decisions#naming).
 
 ### Local consistency
 
-Where the style guide has nothing to say about a particular point of style,
-authors are free to choose the style that they prefer, unless the code in close
-proximity (usually within the same file or package, but sometimes within a team
-or project directory) has taken a consistent stance on the issue.
+如果风格指南没有对特定的风格点提出任何建议，作者可以自由选择他们喜欢的风格，除非相近的程式码（通常在同一个档案或套件中，但有时在团队或专案目录中）对该问题已经采取了一致的态度。
 
-Examples of **valid** local style considerations:
+**有效的** 本地风格考虑的范例：
 
 - Use of `%s` or `%v` for formatted printing of errors
 - Usage of buffered channels in lieu of mutexes
@@ -373,18 +326,9 @@ Examples of **invalid** local style considerations:
 - Line length restrictions for code
 - Use of assertion-based testing libraries
 
-If the local style disagrees with the style guide but the readability impact is
-limited to one file, it will generally be surfaced in a code review for which a
-consistent fix would be outside the scope of the CL in question. At that point,
-it is appropriate to file a bug to track the fix.
+如果本地风格与风格指南不一致，但可读性的影响仅限于一个文件，它通常会在代码审查中出现，而一致的修复超出了相关 CL 的范围。此时，适当的做法是提交一个 bug 以跟踪修复。
 
-If a change would worsen an existing style deviation, expose it in more API
-surfaces, expand the number of files in which the deviation is present, or
-introduce an actual bug, then local consistency is no longer a valid
-justification for violating the style guide for new code. In these cases, it is
-appropriate for the author to clean up the existing codebase in the same CL,
-perform a refactor in advance of the current CL, or find an alternative that at
-least does not make the local problem worse.
+如果更改将恶化现有的风格偏差，将其表现在更多 API 表面上，扩大存在偏差的文件数量，或者引入实际的 bug，那么本地一致性不再是新代码违反风格指南的借口。在这些情况下，作者应在同一 CL 中清理现有的代码库，对当前 CL 进行重构，或找到一个至少不会使本地问题恶化的替代方案。
 
 <!--
 
